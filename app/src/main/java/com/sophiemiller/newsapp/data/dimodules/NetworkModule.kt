@@ -34,7 +34,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(authInterceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
+            //.addInterceptor(authInterceptor)
             .build()
     }
 

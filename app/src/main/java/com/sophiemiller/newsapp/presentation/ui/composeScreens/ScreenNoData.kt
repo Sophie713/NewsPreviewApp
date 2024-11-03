@@ -13,14 +13,5 @@ import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.Ne
 fun ScreenNoData(
     sharedNewsAppViewModel: NewsAppSharedViewModel
 ) {
-    Text(
-        modifier = Modifier.clickable {
-            sharedNewsAppViewModel.onEvent(
-                NewsAppEvents.OnNavigate(
-                    Screens.ScreenLogin
-                )
-            )
-        },
-        text = "No Data Preview"
-    )
+
 }

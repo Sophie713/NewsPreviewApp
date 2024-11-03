@@ -5,20 +5,20 @@ import com.google.gson.annotations.SerializedName
 data class ArticlePreview(
 
     @SerializedName("title")
-    val title: String,
+    val title: String?,
 
     @SerializedName("link")
-    val link: String,
+    val link: String?,
 
     @SerializedName("description")
-    val description: String,
+    val description: String?,
 
     @SerializedName("image_url")
-    val image_url: String,
+    val image_url: String?,
 
     @SerializedName("source_name")
-    val source_name: String,
+    val source_name: String?,
 
     @SerializedName("source_icon")
-    val source_icon: String,
+    val source_icon: String?,
 )

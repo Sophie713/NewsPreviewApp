@@ -11,7 +11,7 @@ data class NewsPreviewListResponse(
     val totalResults: Long,
 
     @SerializedName("results")
-    val results: List<ArticlePreview?>?,
+    val results: List<ArticlePreview?>,
 
     @SerializedName("nextPage")
     val nextPage: Long,

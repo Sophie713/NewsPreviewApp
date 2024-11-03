@@ -11,5 +11,8 @@ import retrofit2.http.Query
  */
 interface NewsDataApi {
     @GET("api/1/latest")//https://newsdata.io/api/1/latest?apikey=pub_580953b403dc1610a7453c0255835f0664e39&q=YOUR-QUERY&page=XXXPPPXXXXXXXXXX
-    suspend fun getNewsList(@Query("page") pageNumber: Int): Response<NewsPreviewListResponse?>?
+    suspend fun getNewsList(
+        @Query("apikey") apiKey: String,
+        @Query("page") pageNumber: Int?
+    ): Response<NewsPreviewListResponse?>?
 }

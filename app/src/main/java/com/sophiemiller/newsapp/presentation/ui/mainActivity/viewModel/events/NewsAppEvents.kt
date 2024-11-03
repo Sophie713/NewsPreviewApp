@@ -54,4 +54,9 @@ sealed class NewsAppEvents {
      * @param destination
      */
     data class OnNavigate(val destination: Screens) : NewsAppEvents()
+
+    /**
+     * open the article
+     */
+    data class OnOpenArticle(val articleUrlLink: String?): NewsAppEvents()
 }

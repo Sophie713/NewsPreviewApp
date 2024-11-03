@@ -2,9 +2,9 @@ package com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation
 
 import androidx.navigation.NavController
 
-class NavManager(private val navController: NavController) { //todo clear backstack
+class NavManager(private val navController: NavController) {
 
-    fun navigate(destination: Screens) { //todo xyz navigate with args
+    fun navigate(destination: Screens) {
         navController.navigate(destination.route)
     }
 }

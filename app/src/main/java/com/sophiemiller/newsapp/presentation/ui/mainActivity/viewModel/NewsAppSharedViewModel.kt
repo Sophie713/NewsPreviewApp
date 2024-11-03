@@ -13,17 +13,20 @@ import com.sophiemiller.newsapp.presentation.ui.screenStates.LoginUiState
 import com.sophiemiller.newsapp.presentation.ui.screenStates.NewsListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
- * shared viewmodel that handles login and data download
+ * shared viewmodel that handles login and news
  *
- * @property todo
+ * @property [NewsDataRepository] repo to download articles
  */
 @HiltViewModel
 class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository: NewsDataRepository) :
@@ -37,62 +40,46 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
     private val _newsUiState = MutableStateFlow(NewsListUiState())
     val newsUiState: StateFlow<NewsListUiState> = _newsUiState
 
+    private var nextPage: Long? = null
+
+    private val _openUrlEvent = MutableSharedFlow<String?>()
+    val openUrlEvent = _openUrlEvent.asSharedFlow()
+
     /**
      * implements all [NewsAppEvents]
      */
     fun onEvent(event: NewsAppEvents) {
         when (event) {
-            is NewsAppEvents.OnEndOfPageReached -> {
-                Log.e(LOG_TAG, "OnEndOfPageReached")
-            }
-
-            is NewsAppEvents.OnLoading -> {
-                Log.e(LOG_TAG, "OnLoading")
-            }
-
-            is NewsAppEvents.OnLogOut -> {
-                Log.e(LOG_TAG, "OnLogOut")
-            }
-
             is NewsAppEvents.OnLoginClicked -> {
                 //Check for empty values
                 _loginUiState.value = loginUiState.value.copy(
                     isLoading = true
                 )
-                if (event.name.isNullOrEmpty()) {
+                if (event.name.isEmpty()) {
                     _loginUiState.value = loginUiState.value.copy(
                         usernameError = "Username cannot be empty",
                         isLoading = false,
                     )
-                } else if (event.password.isNullOrEmpty()) {
+                } else if (event.password.isEmpty()) {
                     _loginUiState.value = loginUiState.value.copy(
                         passwordError = "Password cannot be empty",
                         isLoading = false,
                     )
                 }
                 //Attempt login validation
+                else if (ValidationRepository.validateLogin(event.name, event.password)) {
+                    //reset login values
+                    _loginUiState.value = LoginUiState()
+                    navManager?.navigate(Screens.ScreenNewsPreview)
+                    loadMoreArticles()
+                }
+                // not empty nor valid
                 else {
-                    if (ValidationRepository.validateLogin(event.name, event.password)) {
-                        viewModelScope.launch(Dispatchers.IO) {
-                            val response = newsDataRepository.getMoreNews(successfulLogin = true)
-                            val newList = newsUiState.value.newsList
-                            response?.body()?.results?.let { newList.addAll(it) }
-                            _newsUiState.value = NewsListUiState(
-                                newsList = newList
-                            )
-                            withContext(Dispatchers.Main) {
-                                //reset login values
-                                _loginUiState.value = LoginUiState()
-                                navManager?.navigate(Screens.ScreenNewsPreview)
-                            }
-                        }
-                    } else {
-                        _loginUiState.value = loginUiState.value.copy(
-                            usernameError = "Password and Username don't match",
-                            passwordError = "Password and Username don't match",
-                            isLoading = false,
-                        )
-                    }
+                    _loginUiState.value = loginUiState.value.copy(
+                        usernameError = "Password and Username don't match",
+                        passwordError = "Password and Username don't match",
+                        isLoading = false,
+                    )
                 }
             }
 
@@ -118,12 +105,48 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 )
             }
 
-            is NewsAppEvents.OnNavigate -> {
-                navManager?.navigate(event.destination)
+            is NewsAppEvents.OnLoadMoreArticles -> {
+                loadMoreArticles()
             }
 
-            is NewsAppEvents.OnOpenArticle -> {
-                //todo xyz intent to web browser
+            is NewsAppEvents.OnArticleClicked -> {
+                CoroutineScope(Dispatchers.Default).launch {
+                    _openUrlEvent.tryEmit(event.url)
+                }
+            }
+        }
+    }
+
+    private fun loadMoreArticles() {
+        _newsUiState.value = newsUiState.value.copy(
+            showErrorDialog = false,
+            isLoading = newsUiState.value.newsList.isEmpty()
+        )
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            _newsUiState.value = newsUiState.value.copy(
+                showErrorDialog = true,
+                isLoading = false
+            )
+            logCoroutineException(throwable)
+        }) {
+            val response =
+                newsDataRepository.getMoreNews(successfulLogin = true, pageNumber = nextPage)
+            if (response?.isSuccessful == true && response.body()?.results != null) {
+                nextPage = response.body()?.nextPage
+                val newList = newsUiState.value.newsList
+                response.body()?.results?.let { newList.addAll(it) }
+                _newsUiState.value = NewsListUiState(
+                    newsList = newList
+                )
+            }
+            // error
+            else {
+                withContext(Dispatchers.Main) {
+                    _newsUiState.value = newsUiState.value.copy(
+                        showErrorDialog = true,
+                        isLoading = false
+                    )
+                }
             }
         }
     }
@@ -133,9 +156,9 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
     }
 
     /**
-     * error handler for coroutines
+     * error logger for coroutines
      */
-    private val handler = CoroutineExceptionHandler { _, exception ->
+    private fun logCoroutineException(exception: Throwable) {
         Log.e(LOG_TAG, exception.message.toString())
     }
 }

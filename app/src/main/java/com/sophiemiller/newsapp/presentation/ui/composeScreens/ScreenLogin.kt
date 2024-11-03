@@ -2,7 +2,6 @@ package com.sophiemiller.newsapp.presentation.ui.composeScreens
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,30 +17,26 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sophiemiller.newsapp.R
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.sophiemiller.newsapp.data.LOG_TAG
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 
 @Composable
 fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: NavHostController) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var usernameError by remember { mutableStateOf<String?>(null) }
-    var passwordError by remember { mutableStateOf<String?>(null) }
+
+    val uiState by sharedNewsAppViewModel.loginUiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -56,25 +51,24 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
             contentDescription = "App Logo",
             modifier = Modifier
                 .size(80.dp)
-                .padding(bottom = 24.dp)
+                .padding(top = 24.dp, bottom = 24.dp)
         )
 
         // Username TextField
         OutlinedTextField(
-            value = username,
+            value = uiState.username,
             onValueChange = {
-                username = it
-                usernameError = null  // Clear error when text changes
+                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNameChanged(it))
             },
-            label = {Text("Username")},
-            isError = usernameError != null,
+            label = { Text("Username") },
+            isError = uiState.usernameError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
-        if (usernameError != null) {
+        if (uiState.usernameError != null) {
             Text(
-                text = usernameError ?: "",
+                text = uiState.usernameError ?: "",
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
@@ -87,21 +81,20 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
 
         // Password TextField
         OutlinedTextField(
-            value = password,
+            value = uiState.password,
             onValueChange = {
-                password = it
-                passwordError = null  // Clear error when text changes
+               sharedNewsAppViewModel.onEvent(NewsAppEvents.OnPasswordChanged(it))
             },
             label = { Text("Password") },
-            isError = passwordError != null,
+            isError = uiState.passwordError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
-        if (passwordError != null) {
+        if (uiState.passwordError != null) {
             Text(
-                text = passwordError ?: "",
+                text = uiState.passwordError ?: "",
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
@@ -115,7 +108,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
         // Main Button
         Button(
             onClick = {
-
+                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginClicked(uiState.username, uiState.password))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -126,15 +119,12 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
 
         // Secondary Button
         OutlinedButton(
-            onClick = {navController.navigate(Screens.NoDataScreen.route)},
+            onClick = { navController.navigate(Screens.NoDataScreen.route) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Secondary Action")
+            Text("Skip Login")
         }
     }
 }
 
-fun onLoginClick(username: Any, password: Any) {
-    Log.e(LOG_TAG, "username : $username, password : $password")
-}
 

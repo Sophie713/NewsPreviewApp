@@ -1,6 +1,21 @@
 package com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events
 
 sealed class NewsAppEvents {
+
+    /**
+     * triggered when the user edits name
+     *
+     * @property name
+     */
+    data class OnNameChanged(val name: String) : NewsAppEvents()
+
+    /**
+     * triggered when the user edits password
+     *
+     * @property password
+     */
+    data class OnPasswordChanged(val password: String) : NewsAppEvents()
+
     /**
      * triggered when the user attempts to login
      *

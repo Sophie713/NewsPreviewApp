@@ -46,7 +46,7 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
             /**
              * Screen that shows no data
              */
-            composable(Screens.ScreenNewsPreview.route) {
+            composable(Screens.NoDataScreen.route) {
                 ScreenNoData(
                     sharedNewsAppViewModel = sharedNewsAppViewModel,
                     navController = navController

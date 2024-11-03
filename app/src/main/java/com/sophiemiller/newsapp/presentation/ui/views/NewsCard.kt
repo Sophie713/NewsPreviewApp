@@ -45,7 +45,7 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
         ) {
             //Source
             Row {
-                articlePreview.source_icon?.let {
+                articlePreview.sourceIcon?.let {
                     // Source image from URL
                     AsyncImage(
                         model = it,
@@ -62,7 +62,7 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
 
                 //Source Title
                 Text(
-                    text = articlePreview.source_name ?: "Source",
+                    text = articlePreview.sourceName ?: "Source",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -73,7 +73,7 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
             Spacer(modifier = Modifier.height(8.dp))
             // Image from URL
             AsyncImage(
-                model = articlePreview.image_url,
+                model = articlePreview.imageUrl,
                 contentDescription = articlePreview.title ?: "Title",
                 modifier = Modifier
                     .fillMaxWidth()

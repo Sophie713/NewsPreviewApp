@@ -14,11 +14,11 @@ data class ArticlePreview(
     val description: String?,
 
     @SerializedName("image_url")
-    val image_url: String?,
+    val imageUrl: String?,
 
     @SerializedName("source_name")
-    val source_name: String?,
+    val sourceName: String?,
 
     @SerializedName("source_icon")
-    val source_icon: String?,
+    val sourceIcon: String?,
 )

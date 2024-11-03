@@ -8,13 +8,21 @@ import javax.inject.Inject
 
 class NewsDataRepository @Inject constructor(private val api: NewsDataApi) {
 
+    /**
+     * get more articles to preview - only loading english articles
+     *
+     * @param pageNumber
+     * @param successfulLogin - only add apiKey when login is successful
+     * @return
+     */
     suspend fun getMoreNews(
-        pageNumber: Int? = null,
+        pageNumber: Long? = null,
         successfulLogin: Boolean
     ): Response<NewsPreviewListResponse?>? {
         return api.getNewsList(
             pageNumber = pageNumber,
-            apiKey = if (successfulLogin) BuildConfig.NEWS_API_KEY else ""
+            apiKey = if (successfulLogin) BuildConfig.NEWS_API_KEY else "",
+            language = "en"
         )
     }
 }

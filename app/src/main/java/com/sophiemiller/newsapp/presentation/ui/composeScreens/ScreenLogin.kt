@@ -1,8 +1,10 @@
 package com.sophiemiller.newsapp.presentation.ui.composeScreens
 
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -25,11 +30,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.sophiemiller.newsapp.R
 import androidx.compose.runtime.getValue
-import com.sophiemiller.newsapp.data.LOG_TAG
-import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
+import androidx.compose.ui.graphics.Color
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
@@ -42,6 +45,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -137,6 +141,21 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         ) {
             Text("Skip Login")
         }
+
+    }
+
+    // Loading overlay
+    if (uiState.isLoading) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Gray.copy(alpha = 0.5f))
+                .clickable { }
+        )
+        CircularProgressIndicator(
+            Modifier
+                .fillMaxWidth()
+                .padding(40.dp))
     }
 }
 

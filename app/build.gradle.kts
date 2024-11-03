@@ -86,6 +86,8 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    //Coil
+    implementation(libs.coil.compose)
 
     // VIEW MODEL
     // ViewModel and Compose dependencies
@@ -108,7 +110,4 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-
-    //Coil
-    implementation("io.coil-kt:coil-compose:2.0.0")
 }

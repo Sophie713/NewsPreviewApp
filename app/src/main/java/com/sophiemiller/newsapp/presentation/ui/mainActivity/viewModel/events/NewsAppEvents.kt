@@ -32,31 +32,14 @@ sealed class NewsAppEvents {
     data class OnLoginDialogShow(val isShow : Boolean) : NewsAppEvents()
 
     /**
-     * triggered when the user scrolls down to the end of the news list
+     * load more articles request
      */
-    data object OnEndOfPageReached : NewsAppEvents()
+    data object OnLoadMoreArticles : NewsAppEvents()
 
     /**
-     * triggered when the user logs out
-     */
-    data object OnLogOut : NewsAppEvents()
-
-    /**
-     * show or hide loading
+     * on article clicked - open browser
      *
-     * @property isShown
+     * @property url
      */
-    data class OnLoading(val isShown: Boolean) : NewsAppEvents()
-
-    /**
-     * navigate to another screen
-     *
-     * @param destination
-     */
-    data class OnNavigate(val destination: Screens) : NewsAppEvents()
-
-    /**
-     * open the article
-     */
-    data class OnOpenArticle(val articleUrlLink: String?): NewsAppEvents()
+    data class OnArticleClicked(val url: String?) : NewsAppEvents()
 }

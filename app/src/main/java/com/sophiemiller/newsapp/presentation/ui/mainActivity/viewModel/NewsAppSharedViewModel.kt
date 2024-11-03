@@ -3,6 +3,7 @@ package com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.sophiemiller.newsapp.data.LOG_TAG
+import com.sophiemiller.newsapp.domain.repositories.NewsDataRepository
 import com.sophiemiller.newsapp.domain.repositories.ValidationRepository
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.NavManager
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
@@ -20,7 +21,7 @@ import javax.inject.Inject
  * @property todo
  */
 @HiltViewModel
-class NewsAppSharedViewModel @Inject constructor() :
+class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository: NewsDataRepository) :
     ViewModel() {
 
     private var navManager: NavManager? = null

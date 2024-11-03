@@ -1,4 +1,4 @@
-package com.sophiemiller.newsapp.presentation.theme
+package com.sophiemiller.newsapp.presentation.ui.themes
 
 import androidx.compose.ui.graphics.Color
 

@@ -2,6 +2,8 @@ package com.sophiemiller.newsapp.presentation.ui.composeScreens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -17,7 +19,7 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
     /**
      * edge to edge padding
      */
-    Box(modifier = Modifier.safeDrawingPadding()) {
+    Box(modifier = Modifier.safeDrawingPadding().verticalScroll(rememberScrollState())) {
 
         val navController = rememberNavController()
         NavHost(navController, startDestination = Screens.ScreenLogin.route) {

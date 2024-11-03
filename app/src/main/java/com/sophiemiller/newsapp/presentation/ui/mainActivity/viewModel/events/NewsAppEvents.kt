@@ -1,5 +1,7 @@
 package com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events
 
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
+
 sealed class NewsAppEvents {
 
     /**
@@ -45,4 +47,11 @@ sealed class NewsAppEvents {
      * @property isShown
      */
     data class OnLoading(val isShown: Boolean) : NewsAppEvents()
+
+    /**
+     * navigate to another screen
+     *
+     * @param destination
+     */
+    data class OnNavigate(val destination: Screens) : NewsAppEvents()
 }

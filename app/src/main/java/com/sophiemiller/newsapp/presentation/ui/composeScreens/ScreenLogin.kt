@@ -34,7 +34,7 @@ import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSh
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 
 @Composable
-fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: NavHostController) {
+fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
     val uiState by sharedNewsAppViewModel.loginUiState.collectAsState()
 
@@ -119,7 +119,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
 
         // Secondary Button
         OutlinedButton(
-            onClick = { navController.navigate(Screens.NoDataScreen.route) },
+            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNavigate(Screens.NoDataScreen)) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Skip Login")

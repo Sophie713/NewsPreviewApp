@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.sophiemiller.newsapp.data.LOG_TAG
 import com.sophiemiller.newsapp.domain.repositories.ValidationRepository
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.NavManager
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 import com.sophiemiller.newsapp.presentation.ui.screenStates.LoginUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class NewsAppSharedViewModel @Inject constructor() :
     ViewModel() {
 
+    private var navManager: NavManager? = null
     private val _loginUiState = MutableStateFlow(LoginUIState())
     val loginUiState: StateFlow<LoginUIState> = _loginUiState
 
@@ -55,7 +58,7 @@ class NewsAppSharedViewModel @Inject constructor() :
                 //Attempt login validation
                 else {
                     if (ValidationRepository.validateLogin(event.name, event.password)) {
-                        //todo xyz navigate to list
+                        navManager?.navigate(Screens.ScreenNewsPreview)
                     } else {
                         _loginUiState.value = loginUiState.value.copy(
                             usernameError = "Password and Username don't match",
@@ -84,7 +87,15 @@ class NewsAppSharedViewModel @Inject constructor() :
                     passwordError = null,
                 )
             }
+
+            is NewsAppEvents.OnNavigate -> {
+                navManager?.navigate(event.destination)
+            }
         }
+    }
+
+    fun setNavManager(navManager: NavManager) {
+        this.navManager = navManager
     }
 
     /**

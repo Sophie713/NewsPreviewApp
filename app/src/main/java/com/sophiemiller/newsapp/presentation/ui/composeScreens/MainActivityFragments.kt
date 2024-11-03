@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.NavManager
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 
@@ -19,17 +20,21 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
     /**
      * edge to edge padding
      */
-    Box(modifier = Modifier.safeDrawingPadding().verticalScroll(rememberScrollState())) {
+    Box(modifier = Modifier
+        .safeDrawingPadding()
+        .verticalScroll(rememberScrollState())) {
 
         val navController = rememberNavController()
+        val navManager = NavManager(navController)
+        sharedNewsAppViewModel.setNavManager(navManager)
+
         NavHost(navController, startDestination = Screens.ScreenLogin.route) {
             /**
              * Screen that handles Login
              */
             composable(Screens.ScreenLogin.route) {
                 ScreenLogin(
-                    sharedNewsAppViewModel = sharedNewsAppViewModel,
-                    navController = navController
+                    sharedNewsAppViewModel = sharedNewsAppViewModel
                 )
             }
 
@@ -38,8 +43,7 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
              */
             composable(Screens.ScreenNewsPreview.route) {
                 ScreenNewsPreview(
-                    sharedNewsAppViewModel = sharedNewsAppViewModel,
-                    navController = navController
+                    sharedNewsAppViewModel = sharedNewsAppViewModel
                 )
             }
 
@@ -48,8 +52,7 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
              */
             composable(Screens.NoDataScreen.route) {
                 ScreenNoData(
-                    sharedNewsAppViewModel = sharedNewsAppViewModel,
-                    navController = navController
+                    sharedNewsAppViewModel = sharedNewsAppViewModel
                 )
             }
         }

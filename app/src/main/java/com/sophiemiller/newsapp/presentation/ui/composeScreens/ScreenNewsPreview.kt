@@ -7,14 +7,20 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 
 @Composable
 fun ScreenNewsPreview(
-    sharedNewsAppViewModel: NewsAppSharedViewModel,
-    navController: NavHostController
+    sharedNewsAppViewModel: NewsAppSharedViewModel
 ) {
     Text(
-        modifier = Modifier.clickable { navController.navigate(Screens.ScreenLogin.route) },
+        modifier = Modifier.clickable {
+            sharedNewsAppViewModel.onEvent(
+                NewsAppEvents.OnNavigate(
+                    Screens.ScreenLogin
+                )
+            )
+        },
         text = "Screen News Preview"
     )
 

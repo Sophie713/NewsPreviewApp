@@ -111,7 +111,7 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
 
             is NewsAppEvents.OnArticleClicked -> {
                 CoroutineScope(Dispatchers.Default).launch {
-                    _openUrlEvent.tryEmit(event.url)
+                    _openUrlEvent.emit(event.url)
                 }
             }
         }

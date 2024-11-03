@@ -27,9 +27,9 @@ sealed class NewsAppEvents {
     data class OnLoginClicked(val name: String, val password: String) : NewsAppEvents()
 
     /**
-     * triggered when the user skips login - no data shown
+     * triggered when the user skips login (true) or dismisses the dialog (false)
      */
-    data object OnSkipLoginClicked : NewsAppEvents()
+    data class OnLoginDialogShow(val isShow : Boolean) : NewsAppEvents()
 
     /**
      * triggered when the user scrolls down to the end of the news list

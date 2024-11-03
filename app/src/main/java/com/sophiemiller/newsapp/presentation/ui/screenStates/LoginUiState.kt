@@ -6,4 +6,5 @@ data class LoginUiState(
     val isLoading: Boolean = false,
     val usernameError: String? = null,
     val passwordError: String? = null,
+    val showLoginRequiredDialog: Boolean = false
 )

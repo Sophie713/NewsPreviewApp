@@ -96,8 +96,10 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 }
             }
 
-            is NewsAppEvents.OnSkipLoginClicked -> {
-                Log.e(LOG_TAG, "OnSkipLoginClicked")
+            is NewsAppEvents.OnLoginDialogShow -> {
+                _loginUiState.value = loginUiState.value.copy(
+                    showLoginRequiredDialog = event.isShow
+                )
             }
 
             is NewsAppEvents.OnNameChanged -> {

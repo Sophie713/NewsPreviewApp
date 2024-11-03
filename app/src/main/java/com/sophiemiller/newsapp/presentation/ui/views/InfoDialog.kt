@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun InfoDialog(
     onDismiss: () -> Unit,
-    title: String = "Login Required",
-    description: String = "You need to log in to see articles. Please log in to continue."
+    title: String ,
+    description: String
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(

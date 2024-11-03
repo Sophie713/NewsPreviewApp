@@ -32,6 +32,7 @@ import com.sophiemiller.newsapp.data.LOG_TAG
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
+import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
 
 @Composable
 fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
@@ -45,6 +46,13 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        if (uiState.showLoginRequiredDialog) {
+            InfoDialog(
+                onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(false)) },
+                title = "Login Required",
+                description = "You need to log in to see articles. Please log in to continue."
+            )
+        }
         // Logo at the top
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_logo), // Replace with your logo resource
@@ -83,7 +91,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         OutlinedTextField(
             value = uiState.password,
             onValueChange = {
-               sharedNewsAppViewModel.onEvent(NewsAppEvents.OnPasswordChanged(it))
+                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnPasswordChanged(it))
             },
             label = { Text("Password") },
             isError = uiState.passwordError != null,
@@ -108,7 +116,12 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         // Main Button
         Button(
             onClick = {
-                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginClicked(uiState.username, uiState.password))
+                sharedNewsAppViewModel.onEvent(
+                    NewsAppEvents.OnLoginClicked(
+                        uiState.username,
+                        uiState.password
+                    )
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,7 +132,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
         // Secondary Button
         OutlinedButton(
-            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNavigate(Screens.NoDataScreen)) },
+            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(true)) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Skip Login")

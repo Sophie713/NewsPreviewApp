@@ -63,10 +63,10 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
         OutlinedTextField(
             value = username,
             onValueChange = {
-                username = this.toString()
+                username = it
                 usernameError = null  // Clear error when text changes
             },
-            label = {"Username"},
+            label = {Text("Username")},
             isError = usernameError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -89,10 +89,10 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
         OutlinedTextField(
             value = password,
             onValueChange = {
-                password = this.toString()
+                password = it
                 passwordError = null  // Clear error when text changes
             },
-            label = { "Password" },
+            label = { Text("Password") },
             isError = passwordError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -115,13 +115,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
         // Main Button
         Button(
             onClick = {
-                if (username.isBlank()) {
-                    usernameError = "Username cannot be empty"
-                }
-                if (password.isBlank()) {
-                    passwordError = "Password cannot be empty"
-                }
-                onLoginClick(username, password)
+
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,7 +126,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel, navController: N
 
         // Secondary Button
         OutlinedButton(
-            onClick = {},
+            onClick = {navController.navigate(Screens.NoDataScreen.route)},
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Secondary Action")

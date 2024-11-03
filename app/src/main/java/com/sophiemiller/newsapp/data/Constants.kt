@@ -7,3 +7,13 @@ object Routes {
 }
 
 const val LOG_TAG = "xyz"
+
+/**
+ * Password to validate instead of validation via BE
+ */
+const val STATIC_PASSWORD = "ElongaTheBest"
+
+/**
+ * Username to validate instead of validation via BE
+ */
+const val STATIC_USERNAME = "elonga@elonga.com"

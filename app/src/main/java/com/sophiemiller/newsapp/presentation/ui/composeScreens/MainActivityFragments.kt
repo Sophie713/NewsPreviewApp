@@ -46,15 +46,6 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
                     sharedNewsAppViewModel = sharedNewsAppViewModel
                 )
             }
-
-            /**
-             * Screen that shows no data
-             */
-            composable(Screens.NoDataScreen.route) {
-                ScreenNoData(
-                    sharedNewsAppViewModel = sharedNewsAppViewModel
-                )
-            }
         }
     }
 }

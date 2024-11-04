@@ -44,6 +44,15 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
                     sharedNewsAppViewModel = sharedNewsAppViewModel
                 )
             }
+
+            /**
+             * Screen that shows article detail and enables sharing
+             */
+            composable(Screens.ScreenArticleDetails.route) {
+                ScreenArticleDetails(
+                    sharedNewsAppViewModel = sharedNewsAppViewModel
+                )
+            }
         }
     }
 }

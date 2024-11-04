@@ -23,6 +23,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import com.sophiemiller.newsapp.R
+import com.sophiemiller.newsapp.data.entities.ArticlePreview
+import com.sophiemiller.newsapp.presentation.ui.screenStates.ArticleUiState
 
 /**
  * shared viewmodel that handles login and news
@@ -41,10 +43,13 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
     private val _newsUiState = MutableStateFlow(NewsListUiState())
     val newsUiState: StateFlow<NewsListUiState> = _newsUiState
 
+    private val _articleUiState = MutableStateFlow(ArticleUiState())
+    val articleUiState: StateFlow<ArticleUiState> = _articleUiState
+
     private var nextPage: Long? = null
 
-    private val _openUrlEvent = MutableSharedFlow<String?>()
-    val openUrlEvent = _openUrlEvent.asSharedFlow()
+    private val _shareArticle = MutableSharedFlow<ArticlePreview?>()
+    val shareArticle = _shareArticle.asSharedFlow()
 
     /**
      * implements all [NewsAppEvents]
@@ -111,9 +116,20 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
             }
 
             is NewsAppEvents.OnArticleClicked -> {
+                _articleUiState.value =  articleUiState.value.copy(
+                    articleDetails = newsUiState.value.newsList[event.position]
+                )
+                navManager?.navigate(Screens.ScreenArticleDetails)
+            }
+
+            is NewsAppEvents.OnShareClicked -> {
                 CoroutineScope(Dispatchers.Default).launch {
-                    _openUrlEvent.emit(event.url)
+                    _shareArticle.emit(articleUiState.value.articleDetails)
                 }
+            }
+
+            is NewsAppEvents.OnNavigateBack -> {
+                navManager?.popBackStack()
             }
         }
     }

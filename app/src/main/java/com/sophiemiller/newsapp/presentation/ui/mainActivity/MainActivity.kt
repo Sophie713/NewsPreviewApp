@@ -1,7 +1,6 @@
 package com.sophiemiller.newsapp.presentation.ui.mainActivity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -37,9 +36,9 @@ class MainActivity : ComponentActivity() {
             }
         }
         lifecycleScope.launch {
-            viewModel.openUrlEvent.collectLatest { url ->
+            viewModel.shareArticle.collectLatest { article ->
                 withContext(Dispatchers.Main) {
-                    openArticle(url)
+                    shareArticle(article?.link, article?.title)
                 }
             }
         }
@@ -50,12 +49,14 @@ class MainActivity : ComponentActivity() {
      *
      * @param url
      */
-    private fun openArticle(url: String?) {
-        url?.let {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            // Check if there is an app that can handle this intent
+    private fun shareArticle(url: String?, title: String?) {
+        url?.let { //todo xyz change to share
             try {
-                this.startActivity(intent)
+                val share = Intent(Intent.ACTION_SEND)
+                share.setType("text/plain")
+                share.putExtra(Intent.EXTRA_SUBJECT, "$title")
+                share.putExtra(Intent.EXTRA_TEXT, "$url")
+                startActivity(Intent.createChooser(share, "Share article"))
             } catch (e: Exception) {
                 // Notify the user that no suitable app is available
                 Toast.makeText(

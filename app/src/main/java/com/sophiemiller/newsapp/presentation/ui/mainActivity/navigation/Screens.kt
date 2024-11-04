@@ -10,13 +10,5 @@ import com.sophiemiller.newsapp.data.Routes
 sealed class Screens(val route: String) {
     data object ScreenLogin : Screens(Routes.LOGIN)
     data object ScreenNewsPreview : Screens(Routes.NEWS_PREVIEW)
-
-    fun withArgs(vararg args: String): String {
-        return buildString {
-            append(route)
-            args.forEach {
-                append("/$it")
-            }
-        }
-    }
+    data object ScreenArticleDetails: Screens(Routes.ARTICLE_DETAILS)
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -55,12 +56,12 @@ fun ScreenNewsPreview(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(uiState.newsList) { article ->
+            itemsIndexed(uiState.newsList) { index, article ->
                 article?.let {
                     NewsCard(
                         articlePreview = it,
-                        onArticleClicked = { url ->
-                            sharedNewsAppViewModel.onEvent(NewsAppEvents.OnArticleClicked(url))
+                        onArticleClicked = {
+                            sharedNewsAppViewModel.onEvent(NewsAppEvents.OnArticleClicked(index))
 
                         })
                 }

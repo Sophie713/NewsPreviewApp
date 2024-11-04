@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">NewsApp</string>
+    <string name="no_application_can_handle_this_action">No application can handle this action</string>
+    <string name="no_link_available">No link available</string>
+    <string name="no_preview">No preview</string>
+    <string name="no_title">No title</string>
+    <string name="preview_image">Preview image</string>
+    <string name="unknown_source">Unknown source</string>
+    <string name="ok">OK</string>
+    <string name="error_loading_articles">Error loading articles</string>
+    <string name="you_need_to_log_in_to_see_articles_please_log_in_to_continue">You need to log in to see articles. Please log in to continue.</string>
+    <string name="login_required">Login Required</string>
+    <string name="you_need_to_log_in">You need to log in to see articles. Please log in to continue.</string>
+    <string name="app_logo">App Logo</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="skip_login">Skip Login</string>
+    <string name="username_cannot_be_empty">Username cannot be empty</string>
+    <string name="password_cannot_be_empty">Password cannot be empty</string>
+    <string name="password_and_username_don_t_match">Password and Username don\'t match</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.sophiemiller.newsapp.R
 import com.sophiemiller.newsapp.presentation.ui.composeScreens.MainActivityFragments
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.themes.NewsAppTheme
@@ -44,14 +45,28 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * try to open the articles url or inform user of an error
+     *
+     * @param url
+     */
     private fun openArticle(url: String?) {
         url?.let {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            this.startActivity(intent)
+            // Check if there is an app that can handle this intent
+            try {
+                this.startActivity(intent)
+            } catch (e: Exception) {
+                // Notify the user that no suitable app is available
+                Toast.makeText(
+                    this,
+                    getString(R.string.no_application_can_handle_this_action), Toast.LENGTH_SHORT
+                ).show()
+            }
         } ?: run {
             Toast.makeText(
                 this,
-                "No link available",
+                getString(R.string.no_link_available),
                 Toast.LENGTH_SHORT
             ).show()
         }

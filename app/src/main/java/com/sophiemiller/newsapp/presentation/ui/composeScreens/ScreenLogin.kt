@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.sophiemiller.newsapp.R
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
@@ -53,14 +54,14 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         if (uiState.showLoginRequiredDialog) {
             InfoDialog(
                 onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(false)) },
-                title = "Login Required",
-                description = "You need to log in to see articles. Please log in to continue."
+                title = stringResource(R.string.login_required),
+                description = stringResource(R.string.you_need_to_log_in)
             )
         }
         // Logo at the top
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_logo), // Replace with your logo resource
-            contentDescription = "App Logo",
+            contentDescription = stringResource(R.string.app_logo),
             modifier = Modifier
                 .size(80.dp)
                 .padding(top = 24.dp, bottom = 24.dp)
@@ -72,7 +73,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
             onValueChange = {
                 sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNameChanged(it))
             },
-            label = { Text("Username") },
+            label = { Text(stringResource(R.string.username)) },
             isError = uiState.usernameError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -80,7 +81,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         )
         if (uiState.usernameError != null) {
             Text(
-                text = uiState.usernameError ?: "",
+                text = uiState.usernameError?.let { stringResource(it) } ?: "",
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
@@ -97,7 +98,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
             onValueChange = {
                 sharedNewsAppViewModel.onEvent(NewsAppEvents.OnPasswordChanged(it))
             },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             isError = uiState.passwordError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -106,7 +107,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         )
         if (uiState.passwordError != null) {
             Text(
-                text = uiState.passwordError ?: "",
+                text = uiState.passwordError?.let { stringResource(it) } ?: "",
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
@@ -131,7 +132,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login))
         }
 
         // Secondary Button
@@ -139,7 +140,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
             onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(true)) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Skip Login")
+            Text(stringResource(R.string.skip_login))
         }
 
     }
@@ -155,7 +156,8 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         CircularProgressIndicator(
             Modifier
                 .fillMaxWidth()
-                .padding(40.dp))
+                .padding(40.dp)
+        )
     }
 }
 

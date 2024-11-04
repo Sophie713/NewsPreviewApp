@@ -41,5 +41,15 @@ sealed class NewsAppEvents {
      *
      * @property url
      */
-    data class OnArticleClicked(val url: String?) : NewsAppEvents()
+    data class OnArticleClicked(val position: Int) : NewsAppEvents()
+
+    /**
+     * triggered when user tries to share an article from the detail
+     */
+    data object OnShareClicked : NewsAppEvents()
+
+    /**
+     * navigate back
+     */
+    data object OnNavigateBack : NewsAppEvents()
 }

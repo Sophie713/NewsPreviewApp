@@ -6,7 +6,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sophiemiller.newsapp.R
 
 @Composable
 fun InfoDialog(
@@ -51,7 +53,7 @@ fun InfoDialog(
                 ) {
                     // Cancel Button
                     TextButton(onClick = onDismiss) {
-                        Text("OK")
+                        Text(stringResource(R.string.ok))
                     }
                 }
             }

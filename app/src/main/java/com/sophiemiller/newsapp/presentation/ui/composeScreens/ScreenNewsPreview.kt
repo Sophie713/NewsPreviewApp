@@ -1,17 +1,12 @@
 package com.sophiemiller.newsapp.presentation.ui.composeScreens
 
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +20,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sophiemiller.newsapp.R
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
@@ -51,8 +47,8 @@ fun ScreenNewsPreview(
         if (uiState.showErrorDialog) {
             InfoDialog(
                 onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoadMoreArticles) },
-                title = "Error loading articles",
-                description = "You need to log in to see articles. Please log in to continue."
+                title = stringResource(R.string.error_loading_articles),
+                description = stringResource(R.string.you_need_to_log_in_to_see_articles_please_log_in_to_continue)
             )
         }
         LazyColumn(

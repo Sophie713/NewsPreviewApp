@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -49,12 +50,13 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
                     // Source image from URL
                     AsyncImage(
                         model = it,
-                        contentDescription = articlePreview.title ?: "Title",
+                        contentDescription = articlePreview.sourceName
+                            ?: stringResource(R.string.preview_image),
                         modifier = Modifier
                             .width(24.dp)
                             .height(24.dp),
-                        placeholder = painterResource(R.drawable.ic_logo), // Optional placeholder image
-                        error = painterResource(R.drawable.ic_logo) // Optional error image
+                        placeholder = painterResource(R.drawable.ic_logo),
+                        error = painterResource(R.drawable.ic_logo)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -62,7 +64,7 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
 
                 //Source Title
                 Text(
-                    text = articlePreview.sourceName ?: "Source",
+                    text = articlePreview.sourceName ?: stringResource(R.string.unknown_source),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -74,19 +76,19 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
             // Image from URL
             AsyncImage(
                 model = articlePreview.imageUrl,
-                contentDescription = articlePreview.title ?: "Title",
+                contentDescription = articlePreview.title ?: stringResource(R.string.preview_image),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp),
-                placeholder = painterResource(R.drawable.ic_logo), // Optional placeholder image
-                error = painterResource(R.drawable.ic_logo) // Optional error image
+                placeholder = painterResource(R.drawable.ic_logo),
+                error = painterResource(R.drawable.ic_logo)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             // Title Text
             Text(
-                text = articlePreview.title ?: "Title",
+                text = articlePreview.title ?: stringResource(R.string.no_title),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
@@ -97,7 +99,7 @@ fun NewsCard(articlePreview: ArticlePreview, onArticleClicked: (url: String?) ->
 
             // Description Text
             Text(
-                text = articlePreview.description ?: "Title",
+                text = articlePreview.description ?: stringResource(R.string.no_preview),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,

@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import com.sophiemiller.newsapp.R
 
 /**
  * shared viewmodel that handles login and news
@@ -57,12 +58,12 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 )
                 if (event.name.isEmpty()) {
                     _loginUiState.value = loginUiState.value.copy(
-                        usernameError = "Username cannot be empty",
+                        usernameError = R.string.username_cannot_be_empty,
                         isLoading = false,
                     )
                 } else if (event.password.isEmpty()) {
                     _loginUiState.value = loginUiState.value.copy(
-                        passwordError = "Password cannot be empty",
+                        passwordError = R.string.password_cannot_be_empty,
                         isLoading = false,
                     )
                 }
@@ -76,8 +77,8 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 // not empty nor valid
                 else {
                     _loginUiState.value = loginUiState.value.copy(
-                        usernameError = "Password and Username don't match",
-                        passwordError = "Password and Username don't match",
+                        usernameError = R.string.password_and_username_don_t_match,
+                        passwordError = R.string.password_and_username_don_t_match,
                         isLoading = false,
                     )
                 }

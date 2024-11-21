@@ -36,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
-import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
 
 @Composable
 fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
@@ -51,13 +50,6 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (uiState.showLoginRequiredDialog) {
-            InfoDialog(
-                onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(false)) },
-                title = stringResource(R.string.login_required),
-                description = stringResource(R.string.you_need_to_log_in)
-            )
-        }
         // Logo at the top
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_logo), // Replace with your logo resource
@@ -137,7 +129,7 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
         // Secondary Button
         OutlinedButton(
-            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginDialogShow(true)) },
+            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginSkipped) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.skip_login))

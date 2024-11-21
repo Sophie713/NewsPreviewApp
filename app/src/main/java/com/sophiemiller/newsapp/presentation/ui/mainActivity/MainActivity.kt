@@ -50,19 +50,40 @@ class MainActivity : ComponentActivity() {
      * @param url
      */
     private fun shareArticle(url: String?, title: String?) {
-        url?.let { //todo xyz change to share
-            try {
+        url?.let {
                 val share = Intent(Intent.ACTION_SEND)
                 share.setType("text/plain")
                 share.putExtra(Intent.EXTRA_SUBJECT, "$title")
                 share.putExtra(Intent.EXTRA_TEXT, "$url")
-                startActivity(Intent.createChooser(share, "Share article"))
-            } catch (e: Exception) {
-                // Notify the user that no suitable app is available
-                Toast.makeText(
-                    this,
-                    getString(R.string.no_application_can_handle_this_action), Toast.LENGTH_SHORT
-                ).show()
+            // List of allowed package names
+            val allowedPackages = listOf(
+                "com.facebook.katana", // Facebook
+                "com.twitter.android", // X (Twitter)
+                "com.instagram.android" // Instagram
+            )
+
+            // Query all apps that can handle the intent
+            val packageManager = this.packageManager
+            val resolveInfoList = packageManager.queryIntentActivities(share, 0)
+
+            // Filter to keep only allowed packages
+            val filteredIntents = resolveInfoList
+                .filter { it.activityInfo.packageName in allowedPackages }
+                .map { resolveInfo ->
+                    Intent(share).apply {
+                        `package` = resolveInfo.activityInfo.packageName
+                    }
+                }.toMutableList()
+
+            if (filteredIntents.isNotEmpty()) {
+                // Create a chooser with the filtered intents
+                val chooserIntent = Intent.createChooser(filteredIntents.removeAt(0), title).apply {
+                    putExtra(Intent.EXTRA_INITIAL_INTENTS, filteredIntents.toTypedArray())
+                }
+                this.startActivity(chooserIntent)
+            } else {
+                // Handle case where no allowed apps are installed
+                Toast.makeText(this, "No compatible apps installed", Toast.LENGTH_SHORT).show()
             }
         } ?: run {
             Toast.makeText(

@@ -1,15 +1,12 @@
 package com.sophiemiller.newsapp.presentation.ui.composeScreens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,14 +17,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sophiemiller.newsapp.R
+import com.sophiemiller.newsapp.data.ERR_UNAUTHORIZED
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
+import com.sophiemiller.newsapp.presentation.ui.screenStates.mappers.getButtonText
+import com.sophiemiller.newsapp.presentation.ui.screenStates.mappers.getMessage
+import com.sophiemiller.newsapp.presentation.ui.screenStates.mappers.getOnClickEvent
 import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
 import com.sophiemiller.newsapp.presentation.ui.views.NewsCard
+import com.sophiemiller.newsapp.presentation.ui.views.OneButtonDialog
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -45,11 +46,13 @@ fun ScreenNewsPreview(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (uiState.showErrorDialog) {
-            InfoDialog(
+        uiState.showErrorDialog?.let {
+            OneButtonDialog(
                 onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoadMoreArticles) },
+                onButtonClicked = { sharedNewsAppViewModel.onEvent(it.getOnClickEvent(it.errorCode)) },
                 title = stringResource(R.string.error_loading_articles),
-                description = stringResource(R.string.you_need_to_log_in_to_see_articles_please_log_in_to_continue)
+                description = stringResource(it.getMessage(it.errorCode)),
+                buttonText = stringResource(it.getButtonText(it.errorCode)),
             )
         }
         LazyColumn(
@@ -66,6 +69,16 @@ fun ScreenNewsPreview(
                         })
                 }
             }
+            if (uiState.isLoading) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                    )
+                }
+            }
         }
         LaunchedEffect(listState) {
             snapshotFlow { listState.firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size >= listState.layoutInfo.totalItemsCount }
@@ -76,20 +89,5 @@ fun ScreenNewsPreview(
                     }
                 }
         }
-    }
-    // Loading overlay
-    if (uiState.isLoading) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Gray.copy(alpha = 0.5f))
-                .clickable { }
-        )
-
-        CircularProgressIndicator(
-            Modifier
-                .fillMaxWidth()
-                .padding(40.dp)
-        )
     }
 }

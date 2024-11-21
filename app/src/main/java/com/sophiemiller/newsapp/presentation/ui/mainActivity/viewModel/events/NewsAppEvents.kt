@@ -1,7 +1,5 @@
 package com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events
 
-import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
-
 sealed class NewsAppEvents {
 
     /**
@@ -27,9 +25,9 @@ sealed class NewsAppEvents {
     data class OnLoginClicked(val name: String, val password: String) : NewsAppEvents()
 
     /**
-     * triggered when the user skips login (true) or dismisses the dialog (false)
+     * triggered when the user skips login
      */
-    data class OnLoginDialogShow(val isShow : Boolean) : NewsAppEvents()
+    data object OnLoginSkipped : NewsAppEvents()
 
     /**
      * load more articles request
@@ -52,4 +50,9 @@ sealed class NewsAppEvents {
      * navigate back
      */
     data object OnNavigateBack : NewsAppEvents()
+
+    /**
+     * On login screen shown I want to clear all loaded data
+     */
+    data object OnLoginShown : NewsAppEvents()
 }

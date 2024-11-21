@@ -33,6 +33,16 @@ android {
             "NEWS_API_KEY",
             "\"${properties.getProperty("NEWS_API_KEY")}\""
         )
+        buildConfigField(
+            "String",
+            "STATIC_PASSWORD",
+            "\"${properties.getProperty("STATIC_PASSWORD")}\""
+        )
+        buildConfigField(
+            "String",
+            "STATIC_USERNAME",
+            "\"${properties.getProperty("STATIC_USERNAME")}\""
+        )
     }
 
     buildTypes {

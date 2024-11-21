@@ -6,14 +6,6 @@ object Routes {
     const val ARTICLE_DETAILS = "ARTICLE_DETAILS"
 }
 
+const val ERR_UNAUTHORIZED = 401
 const val LOG_TAG = "xyz"
 
-/**
- * Password to validate instead of validation via BE
- */
-const val STATIC_PASSWORD = "ElongaTheBest"
-
-/**
- * Username to validate instead of validation via BE
- */
-const val STATIC_USERNAME = "elonga@elonga.com"

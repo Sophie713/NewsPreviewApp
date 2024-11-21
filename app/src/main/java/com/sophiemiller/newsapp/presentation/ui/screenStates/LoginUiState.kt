@@ -10,5 +10,4 @@ data class LoginUiState(
     val usernameError: Int? = null,
     @StringRes
     val passwordError: Int? = null,
-    val showLoginRequiredDialog: Boolean = false
 )

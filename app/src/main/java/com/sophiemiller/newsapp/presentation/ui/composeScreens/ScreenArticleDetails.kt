@@ -41,7 +41,7 @@ fun ScreenArticleDetails(sharedNewsAppViewModel: NewsAppSharedViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = uiState.articleDetails?.sourceName.toString()) }, //todo xyz source ??
+                title = { Text(text = uiState.articleDetails?.sourceName.toString()) },
                 navigationIcon = {
                     IconButton(onClick = {
                         sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNavigateBack)

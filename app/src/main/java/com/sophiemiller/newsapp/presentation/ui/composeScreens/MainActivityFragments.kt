@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.NavManager
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.Screens
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
+import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
 
 @Composable
 fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
@@ -31,6 +32,7 @@ fun MainActivityFragments(sharedNewsAppViewModel: NewsAppSharedViewModel) {
              * Screen that handles Login
              */
             composable(Screens.ScreenLogin.route) {
+                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginShown)
                 ScreenLogin(
                     sharedNewsAppViewModel = sharedNewsAppViewModel
                 )

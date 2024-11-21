@@ -1,9 +1,7 @@
 package com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sophiemiller.newsapp.data.LOG_TAG
 import com.sophiemiller.newsapp.domain.repositories.NewsDataRepository
 import com.sophiemiller.newsapp.domain.repositories.ValidationRepository
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.navigation.NavManager
@@ -12,7 +10,6 @@ import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.Ne
 import com.sophiemiller.newsapp.presentation.ui.screenStates.LoginUiState
 import com.sophiemiller.newsapp.presentation.ui.screenStates.NewsListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +21,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import com.sophiemiller.newsapp.R
 import com.sophiemiller.newsapp.data.entities.ArticlePreview
+import com.sophiemiller.newsapp.data.entities.ListErrorDialog
+import com.sophiemiller.newsapp.domain.errorHandler.getCoroutineHandler
 import com.sophiemiller.newsapp.presentation.ui.screenStates.ArticleUiState
 
 /**
@@ -46,7 +45,15 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
     private val _articleUiState = MutableStateFlow(ArticleUiState())
     val articleUiState: StateFlow<ArticleUiState> = _articleUiState
 
+    /**
+     * Next page to load from articles, comes every time articles get downloaded
+     */
     private var nextPage: Long? = null
+
+    /**
+     * Successful login to enable login skip - no API key in that case
+     */
+    private var successfulLogin = false
 
     private val _shareArticle = MutableSharedFlow<ArticlePreview?>()
     val shareArticle = _shareArticle.asSharedFlow()
@@ -74,10 +81,9 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 }
                 //Attempt login validation
                 else if (ValidationRepository.validateLogin(event.name, event.password)) {
-                    //reset login values
-                    _loginUiState.value = LoginUiState()
-                    navManager?.navigate(Screens.ScreenNewsPreview)
-                    loadMoreArticles()
+                    // set successful login
+                    successfulLogin = true
+                    navigateToListOfArticles()
                 }
                 // not empty nor valid
                 else {
@@ -89,10 +95,9 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
                 }
             }
 
-            is NewsAppEvents.OnLoginDialogShow -> {
-                _loginUiState.value = loginUiState.value.copy(
-                    showLoginRequiredDialog = event.isShow
-                )
+            is NewsAppEvents.OnLoginSkipped -> {
+                successfulLogin = false
+                navigateToListOfArticles()
             }
 
             is NewsAppEvents.OnNameChanged -> {
@@ -116,7 +121,7 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
             }
 
             is NewsAppEvents.OnArticleClicked -> {
-                _articleUiState.value =  articleUiState.value.copy(
+                _articleUiState.value = articleUiState.value.copy(
                     articleDetails = newsUiState.value.newsList[event.position]
                 )
                 navManager?.navigate(Screens.ScreenArticleDetails)
@@ -131,36 +136,43 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
             is NewsAppEvents.OnNavigateBack -> {
                 navManager?.popBackStack()
             }
+
+            is NewsAppEvents.OnLoginShown -> {
+               _newsUiState.value = NewsListUiState()
+            }
         }
     }
 
     private fun loadMoreArticles() {
         _newsUiState.value = newsUiState.value.copy(
-            showErrorDialog = false,
-            isLoading = newsUiState.value.newsList.isEmpty()
+            showErrorDialog = null,
+            isLoading = true
         )
-        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+        viewModelScope.launch(Dispatchers.IO + getCoroutineHandler {
             _newsUiState.value = newsUiState.value.copy(
-                showErrorDialog = true,
+                showErrorDialog = ListErrorDialog(),
                 isLoading = false
             )
-            logCoroutineException(throwable)
         }) {
             val response =
-                newsDataRepository.getMoreNews(successfulLogin = true, pageNumber = nextPage)
+                newsDataRepository.getMoreNews(
+                    successfulLogin = successfulLogin,
+                    pageNumber = nextPage
+                )
             if (response?.isSuccessful == true && response.body()?.results != null) {
                 nextPage = response.body()?.nextPage
                 val newList = newsUiState.value.newsList
                 response.body()?.results?.let { newList.addAll(it) }
-                _newsUiState.value = NewsListUiState(
-                    newsList = newList
+                _newsUiState.value = newsUiState.value.copy(
+                    newsList = newList,
+                    isLoading = false
                 )
             }
             // error
             else {
                 withContext(Dispatchers.Main) {
                     _newsUiState.value = newsUiState.value.copy(
-                        showErrorDialog = true,
+                        showErrorDialog = ListErrorDialog(response?.code()),
                         isLoading = false
                     )
                 }
@@ -168,14 +180,14 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
         }
     }
 
+    private fun navigateToListOfArticles() {
+        navManager?.navigate(Screens.ScreenNewsPreview)
+        _loginUiState.value = LoginUiState()
+        loadMoreArticles()
+    }
+
     fun setNavManager(navManager: NavManager) {
         this.navManager = navManager
     }
 
-    /**
-     * error logger for coroutines
-     */
-    private fun logCoroutineException(exception: Throwable) {
-        Log.e(LOG_TAG, exception.message.toString())
-    }
 }

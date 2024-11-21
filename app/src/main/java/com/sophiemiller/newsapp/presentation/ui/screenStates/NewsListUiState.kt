@@ -1,6 +1,7 @@
 package com.sophiemiller.newsapp.presentation.ui.screenStates
 
 import com.sophiemiller.newsapp.data.entities.ArticlePreview
+import com.sophiemiller.newsapp.data.entities.ListErrorDialog
 
 /**
  * State for [ScreenNewsPreview]
@@ -11,6 +12,6 @@ import com.sophiemiller.newsapp.data.entities.ArticlePreview
  */
 data class NewsListUiState(
     val newsList: MutableList<ArticlePreview?> = mutableListOf(),
-    val showErrorDialog: Boolean = false,
+    val showErrorDialog: ListErrorDialog? = null,
     val isLoading: Boolean = false,
 )

@@ -8,7 +8,7 @@
     <string name="unknown_source">Unknown source</string>
     <string name="ok">OK</string>
     <string name="error_loading_articles">Error loading articles</string>
-    <string name="you_need_to_log_in_to_see_articles_please_log_in_to_continue">You need to log in to see articles. Please log in to continue.</string>
+    <string name="error_msg_you_need_to_log_in">You need to log in to see articles. Please log in to continue.</string>
     <string name="login_required">Login Required</string>
     <string name="you_need_to_log_in">You need to log in to see articles. Please log in to continue.</string>
     <string name="app_logo">App Logo</string>
@@ -20,4 +20,6 @@
     <string name="password_cannot_be_empty">Password cannot be empty</string>
     <string name="password_and_username_don_t_match">Password and Username don\'t match</string>
     <string name="no_article">No article content available</string>
+    <string name="default_error_msg">Something went wrong, please check your connection and try again.</string>
+    <string name="log_in">Log in</string>
 </resources>

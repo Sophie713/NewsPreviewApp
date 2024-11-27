@@ -32,15 +32,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.sophiemiller.newsapp.R
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
+import com.sophiemiller.newsapp.presentation.utils.SingleClickHelperImpl
 
 @Composable
 fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
     val uiState by sharedNewsAppViewModel.loginUiState.collectAsState()
+    val singleClickHelper = remember { SingleClickHelperImpl() }
 
     Column(
         modifier = Modifier
@@ -113,12 +116,14 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
         // Main Button
         Button(
             onClick = {
-                sharedNewsAppViewModel.onEvent(
-                    NewsAppEvents.OnLoginClicked(
-                        uiState.username,
-                        uiState.password
+                singleClickHelper.onClick {
+                    sharedNewsAppViewModel.onEvent(
+                        NewsAppEvents.OnLoginClicked(
+                            uiState.username,
+                            uiState.password
+                        )
                     )
-                )
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +134,9 @@ fun ScreenLogin(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
         // Secondary Button
         OutlinedButton(
-            onClick = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginSkipped) },
+            onClick = {
+                singleClickHelper.onClick { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoginSkipped) }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.skip_login))

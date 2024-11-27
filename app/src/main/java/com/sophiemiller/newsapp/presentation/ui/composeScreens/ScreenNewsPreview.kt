@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import com.sophiemiller.newsapp.presentation.ui.screenStates.mappers.getOnClickE
 import com.sophiemiller.newsapp.presentation.ui.views.InfoDialog
 import com.sophiemiller.newsapp.presentation.ui.views.NewsCard
 import com.sophiemiller.newsapp.presentation.ui.views.OneButtonDialog
+import com.sophiemiller.newsapp.presentation.utils.SingleClickHelperImpl
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -38,6 +40,7 @@ fun ScreenNewsPreview(
 
     val uiState by sharedNewsAppViewModel.newsUiState.collectAsState()
     val listState = rememberLazyListState()
+    val singleClickHelper = remember { SingleClickHelperImpl(300L) }
 
     Column(
         modifier = Modifier
@@ -48,8 +51,22 @@ fun ScreenNewsPreview(
     ) {
         uiState.showErrorDialog?.let {
             OneButtonDialog(
-                onDismiss = { sharedNewsAppViewModel.onEvent(NewsAppEvents.OnLoadMoreArticles) },
-                onButtonClicked = { sharedNewsAppViewModel.onEvent(it.getOnClickEvent(it.errorCode)) },
+                onDismiss = {
+                    singleClickHelper.onClick {
+                        sharedNewsAppViewModel.onEvent(
+                            NewsAppEvents.OnLoadMoreArticles
+                        )
+                    }
+                },
+                onButtonClicked = {
+                    singleClickHelper.onClick {
+                        sharedNewsAppViewModel.onEvent(
+                            it.getOnClickEvent(
+                                it.errorCode
+                            )
+                        )
+                    }
+                },
                 title = stringResource(R.string.error_loading_articles),
                 description = stringResource(it.getMessage(it.errorCode)),
                 buttonText = stringResource(it.getButtonText(it.errorCode)),

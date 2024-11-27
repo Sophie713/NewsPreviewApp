@@ -183,7 +183,6 @@ class NewsAppSharedViewModel @Inject constructor(private val newsDataRepository:
     private fun navigateToListOfArticles() {
         navManager?.navigate(Screens.ScreenNewsPreview)
         _loginUiState.value = LoginUiState()
-        loadMoreArticles()
     }
 
     fun setNavManager(navManager: NavManager) {

@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -31,29 +32,40 @@ import coil.compose.AsyncImage
 import com.sophiemiller.newsapp.R
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.NewsAppSharedViewModel
 import com.sophiemiller.newsapp.presentation.ui.mainActivity.viewModel.events.NewsAppEvents
+import com.sophiemiller.newsapp.presentation.utils.SingleClickHelperImpl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenArticleDetails(sharedNewsAppViewModel: NewsAppSharedViewModel) {
 
     val uiState by sharedNewsAppViewModel.articleUiState.collectAsState()
+    val singleClickHelper = remember { SingleClickHelperImpl() }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = uiState.articleDetails?.sourceName.toString()) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNavigateBack)
-                    }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    IconButton(
+                        onClick = {
+                            singleClickHelper.onClick {
+                                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnNavigateBack)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 },
                 actions = {
                     IconButton(
                         onClick = {
                             // Share the article
-                            sharedNewsAppViewModel.onEvent(NewsAppEvents.OnShareClicked)
+                            singleClickHelper.onClick {
+                                sharedNewsAppViewModel.onEvent(NewsAppEvents.OnShareClicked)
+                            }
                         }
                     ) {
                         Icon(imageVector = Icons.Default.Share, contentDescription = "Share")

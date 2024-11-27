@@ -1,7 +1,5 @@
 package com.sophiemiller.newsapp.presentation.utils
 
-import android.util.Log
-
 internal interface SingleClickHelper {
     fun onClick(event: () -> Unit)
 
